@@ -272,7 +272,9 @@
         }
 
         .tile {
-            background: linear-gradient(135deg, #fffef9 0%, #fff9e6 100%);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             border: clamp(2px, 0.5vw, 3px) solid #8b5a2b;
             display: flex;
             flex-direction: column;
@@ -294,7 +296,6 @@
         .tile:hover {
             transform: translateY(-3px);
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 6px 15px rgba(102, 126, 234, 0.4);
-            background: linear-gradient(135deg, #fff9f0 0%, #fff9e6 100%);
         }
 
         .tile span {
@@ -312,25 +313,27 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 28%;
+            height: 0;
             width: 100%;
             border-radius: 2px 2px 0 0;
-            border-bottom: 2px solid rgba(0,0,0,0.15);
+            display: none;
         }
 
-        .side-top .tile-header { background: linear-gradient(135deg, #00c853 0%, #00897b 100%); }
-        .side-right .tile-header { background: linear-gradient(135deg, #00c853 0%, #00897b 100%); }
-        .side-bottom .tile-header { background: linear-gradient(135deg, #00c853 0%, #00897b 100%); }
-        .side-left .tile-header { background: linear-gradient(135deg, #00c853 0%, #00897b 100%); }
+        .side-top .tile-header { display: none; }
+        .side-right .tile-header { display: none; }
+        .side-bottom .tile-header { display: none; }
+        .side-left .tile-header { display: none; }
         .corner-tile { 
-            background: linear-gradient(135deg, #fffef9 0%, #fff9e6 100%);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             border: 3px solid #8b5a2b;
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 5px rgba(0,0,0,0.2);
             border-radius: 4px;
         }
         
         .corner-tile .tile-header {
-            background: linear-gradient(135deg, #00c853 0%, #00897b 100%) !important;
+            display: none;
         }
 
         .player-token {
@@ -1105,7 +1108,7 @@
         const cityData = [
             { name: "Mulai", side: "corner" },
             { name: "Jakarta", side: "side-top", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/JAKARTA.png" },
-            { name: "Bandung", side: "side-top", image: "https://githubusercontent.com/riyanarahman320/26/blob/1c81d3008b8756c5a51e6af44d603c32da695600/BANDUNG.png" },
+            { name: "Bandung", side: "side-top", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/JAKARTA.png" },
             { name: "Cirebon", side: "side-top", image: "https://githubusercontent.com/riyanarahman320/26/blob/1c81d3008b8756c5a51e6af44d603c32da695600/BANDUNG.png" },
             { name: "Jogja", side: "corner", image: "https://githubusercontent.com/riyanarahman320/26/blob/1c81d3008b8756c5a51e6af44d603c32da695600/BANDUNG.png" },
             { name: "Solo", side: "side-right", image: "https://githubusercontent.com/riyanarahman320/26/blob/1c81d3008b8756c5a51e6af44d603c32da695600/BANDUNG.png" },
@@ -1248,6 +1251,8 @@
 
         function initBoard() {
             const board = document.getElementById('board');
+            const defaultImage = 'https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/JAKARTA.png';
+            
             cityData.forEach((city, i) => {
                 if (i === 0) return;
                 
@@ -1256,18 +1261,11 @@
                     tile.id = `tile-${i}`;
                     tile.style.gridRow = gridCoords[i][0];
                     tile.style.gridColumn = gridCoords[i][1];
-                    let inner = `<div class="tile-header"></div><span style="z-index: 10;">${city.name}</span>`;
+                    let inner = `<span style="z-index: 10;">${city.name}</span>`;
 
-                    // If city provides an image property, use it as background and fit it inside the tile
-                    if (city.image) {
-                        tile.style.backgroundImage = `url(${city.image})`;
-                        tile.style.backgroundRepeat = 'no-repeat';
-                        tile.style.backgroundSize = 'cover';
-                        tile.style.backgroundPosition = 'center';
-
-                        // Slightly dim the image to keep the city name readable
-                        tile.style.position = 'relative';
-                    }
+                    // Set background image - use city.image if available, otherwise use default JAKARTA.png
+                    const imageUrl = city.image || defaultImage;
+                    tile.style.backgroundImage = `url(${imageUrl})`;
 
                     tile.innerHTML = inner;
                     board.appendChild(tile);
