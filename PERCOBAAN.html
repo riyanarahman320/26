@@ -358,7 +358,7 @@
             right: clamp(15px, 4vw, 40px);
             display: flex;
             flex-direction: column;
-            gap: clamp(10px, 2vw, 15px);
+            align-items: center;
             z-index: 60;
         }
 
@@ -366,32 +366,52 @@
             display: none !important;
         }
 
+        .btn-dir-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(8px, 2vw, 12px);
+            width: fit-content;
+        }
+
         .btn-dir {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: clamp(2px, 0.5vw, 3px) solid #c41e3a;
             color: white;
-            width: clamp(60px, 15vw, 70px);
-            height: clamp(60px, 15vw, 70px);
-            border-radius: 15px;
+            width: clamp(55px, 12vw, 65px);
+            height: clamp(55px, 12vw, 65px);
+            border-radius: 12px;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             font-weight: 900;
             cursor: pointer;
-            box-shadow: 0 clamp(3px, 1vw, 5px) 0 #c41e3a;
-            transition: all 0.1s;
-            font-size: clamp(16px, 4vw, 20px);
+            box-shadow: 0 clamp(3px, 1vw, 5px) 0 #8b1a38;
+            transition: all 0.15s;
+            font-size: clamp(18px, 4vw, 22px);
             padding: 0;
         }
 
-        .btn-dir:hover {
+        .btn-dir:hover:not(:disabled) {
             background: linear-gradient(135deg, #764ba2 0%, #f093fb 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 clamp(4px, 1.2vw, 7px) 0 #8b1a38;
         }
 
-        .btn-dir:active { 
-            transform: translateY(3px); 
-            box-shadow: 0 2px 0 #c41e3a; 
+        .btn-dir:active:not(:disabled) { 
+            transform: translateY(2px); 
+            box-shadow: 0 clamp(1px, 0.3vw, 2px) 0 #8b1a38; 
+        }
+
+        .btn-dir:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            background: linear-gradient(135deg, #888 0%, #666 100%);
+        }
+
+        .btn-dir.active {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            border-color: #16a34a;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.6), 0 clamp(3px, 1vw, 5px) 0 #16a34a;
         }
 
         .btn-dir span { 
@@ -669,6 +689,10 @@
                 right: clamp(15px, 3vw, 25px);
             }
 
+            .btn-dir-container {
+                gap: clamp(6px, 1.5vw, 10px);
+            }
+
             .btn-dir {
                 width: clamp(55px, 12vw, 65px);
                 height: clamp(55px, 12vw, 65px);
@@ -779,6 +803,10 @@
             .control-group {
                 bottom: clamp(10px, 2vw, 15px);
                 right: clamp(10px, 2vw, 15px);
+            }
+
+            .btn-dir-container {
+                gap: clamp(5px, 1.2vw, 8px);
             }
 
             .btn-dir {
@@ -945,6 +973,10 @@
                 right: clamp(8px, 1.5vw, 12px);
             }
 
+            .btn-dir-container {
+                gap: clamp(4px, 1vw, 6px);
+            }
+
             .btn-dir {
                 width: clamp(48px, 10vw, 55px);
                 height: clamp(48px, 10vw, 55px);
@@ -1021,7 +1053,12 @@
 
         <!-- Control Button -->
         <div id="move-btn-ctrl" class="control-group hidden">
-            <button class="btn-dir" onclick="handleMove('right')">▶</button>
+            <div class="btn-dir-container">
+                <button style="grid-column: 2;" class="btn-dir" id="btn-up" onclick="handleMove('up')">▲</button>
+                <button style="grid-column: 1;" class="btn-dir" id="btn-left" onclick="handleMove('left')">◀</button>
+                <button style="grid-column: 3;" class="btn-dir" id="btn-right" onclick="handleMove('right')">▶</button>
+                <button style="grid-column: 2;" class="btn-dir" id="btn-down" onclick="handleMove('down')">▼</button>
+            </div>
         </div>
     </main>
 
@@ -1061,20 +1098,20 @@
         const cityData = [
             { name: "Mulai", side: "corner" },
             { name: "Jakarta", side: "side-top", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/JAKARTA.png" },
-            { name: "Bandung", side: "side-top" },
-            { name: "Cirebon", side: "side-top" },
-            { name: "Jogja", side: "corner" },
-            { name: "Solo", side: "side-right" },
-            { name: "Surabaya", side: "side-right" },
-            { name: "Bali", side: "side-right" },
-            { name: "Lombok", side: "corner" },
-            { name: "Makassar", side: "side-bottom" },
-            { name: "Manado", side: "side-bottom" },
-            { name: "Ambon", side: "side-bottom" },
-            { name: "Ternate", side: "corner" },
-            { name: "Papua", side: "side-left" },
-            { name: "Kalimantan", side: "side-left" },
-            { name: "Aceh", side: "side-left" }
+            { name: "Bandung", side: "side-top", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/BANDUNG.png" },
+            { name: "Cirebon", side: "side-top", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/CIREBON.png" },
+            { name: "Jogja", side: "corner", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/JOGJA.png" },
+            { name: "Solo", side: "side-right", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/SOLO.png" },
+            { name: "Surabaya", side: "side-right", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/SURABAYA.png" },
+            { name: "Bali", side: "side-right", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/BALI.png" },
+            { name: "Lombok", side: "corner", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/LOMBOK.png" },
+            { name: "Makassar", side: "side-bottom", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/MAKASSAR.png" },
+            { name: "Manado", side: "side-bottom", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/MANADO.png" },
+            { name: "Ambon", side: "side-bottom", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/AMBON.png" },
+            { name: "Ternate", side: "corner", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/TERNATE.png" },
+            { name: "Papua", side: "side-left", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/PAPUA.png" },
+            { name: "Kalimantan", side: "side-left", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/KALIMANTAN.png" },
+            { name: "Aceh", side: "side-left", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/ACEH.png" }
         ];
 
         const cityQuestions = {
@@ -1199,6 +1236,7 @@
             document.getElementById('status-avatar').innerHTML = charAssets[charId];
             
             updateTokenPos();
+            updateControlButtons();
         }
 
         function initBoard() {
@@ -1254,16 +1292,23 @@
             let move = 0;
             const i = state.idx;
 
+            // Top row (0-4): bergerak horizontal
             if (i >= 0 && i <= 4) {
                 if (dir === 'right') move = 1;
                 if (dir === 'left') move = -1;
-            } else if (i >= 5 && i <= 8) {
+            } 
+            // Right side (5-8): bergerak vertikal ke bawah
+            else if (i >= 5 && i <= 8) {
                 if (dir === 'down') move = 1;
                 if (dir === 'up') move = -1;
-            } else if (i >= 9 && i <= 12) {
+            } 
+            // Bottom row (9-12): bergerak horizontal ke kiri
+            else if (i >= 9 && i <= 12) {
                 if (dir === 'left') move = 1;
                 if (dir === 'right') move = -1;
-            } else {
+            } 
+            // Left side (13-15): bergerak vertikal ke atas
+            else if (i >= 13 && i <= 15) {
                 if (dir === 'up') move = 1;
                 if (dir === 'down') move = -1;
             }
@@ -1272,6 +1317,7 @@
             state.isMoving = true;
             state.idx = (state.idx + move + 16) % 16;
             updateTokenPos();
+            updateControlButtons();
 
             setTimeout(() => {
                 if (!state.visited.has(state.idx)) {
@@ -1281,6 +1327,41 @@
                     state.isMoving = false;
                 }
             }, 850);
+        }
+
+        function updateControlButtons() {
+            const i = state.idx;
+            const buttons = {
+                up: document.getElementById('btn-up'),
+                down: document.getElementById('btn-down'),
+                left: document.getElementById('btn-left'),
+                right: document.getElementById('btn-right')
+            };
+
+            // Reset semua
+            Object.values(buttons).forEach(btn => {
+                btn.disabled = true;
+                btn.classList.remove('active');
+            });
+
+            // Tentukan tombol mana saja yang aktif berdasarkan lokasi
+            if (i >= 0 && i <= 4) {
+                // Top row: hanya LEFT dan RIGHT
+                buttons.left.disabled = false;
+                buttons.right.disabled = false;
+            } else if (i >= 5 && i <= 8) {
+                // Right side: hanya UP dan DOWN
+                buttons.up.disabled = false;
+                buttons.down.disabled = false;
+            } else if (i >= 9 && i <= 12) {
+                // Bottom row: hanya LEFT dan RIGHT
+                buttons.left.disabled = false;
+                buttons.right.disabled = false;
+            } else if (i >= 13 && i <= 15) {
+                // Left side: hanya UP dan DOWN
+                buttons.up.disabled = false;
+                buttons.down.disabled = false;
+            }
         }
 
         function showQuiz() {
@@ -1369,6 +1450,43 @@
             }
             
             overlay.classList.add('show');
+        }
+
+        function updateControlButtons() {
+            const i = state.idx;
+            const buttons = {
+                up: document.getElementById('btn-up'),
+                down: document.getElementById('btn-down'),
+                left: document.getElementById('btn-left'),
+                right: document.getElementById('btn-right')
+            };
+
+            // Reset semua tombol
+            Object.values(buttons).forEach(btn => {
+                if (btn) {
+                    btn.disabled = true;
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Tentukan tombol mana saja yang aktif berdasarkan lokasi pemain
+            if (i >= 0 && i <= 4) {
+                // Top row: hanya LEFT dan RIGHT
+                if (buttons.left) buttons.left.disabled = false;
+                if (buttons.right) buttons.right.disabled = false;
+            } else if (i >= 5 && i <= 8) {
+                // Right side: hanya UP dan DOWN
+                if (buttons.up) buttons.up.disabled = false;
+                if (buttons.down) buttons.down.disabled = false;
+            } else if (i >= 9 && i <= 12) {
+                // Bottom row: hanya LEFT dan RIGHT
+                if (buttons.left) buttons.left.disabled = false;
+                if (buttons.right) buttons.right.disabled = false;
+            } else if (i >= 13 && i <= 15) {
+                // Left side: hanya UP dan DOWN
+                if (buttons.up) buttons.up.disabled = false;
+                if (buttons.down) buttons.down.disabled = false;
+            }
         }
 
         window.addEventListener('keydown', (e) => {
