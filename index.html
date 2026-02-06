@@ -546,6 +546,14 @@
             box-shadow: inset 0 2px 5px rgba(255,255,255,0.5), 0 4px 10px rgba(0,0,0,0.2);
             pointer-events: none;
             z-index: 5;
+            overflow: hidden;
+        }
+
+        .center-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
         }
 
         .center-title {
@@ -1045,8 +1053,7 @@
     <main class="game-main">
         <div id="board" class="monopoly-board">
             <div class="center-area">
-                <h2 class="center-title">RESONANCE<br>ODYSSEY</h2>
-                <div class="center-subtitle">Ekspedisi Musik Nusantara</div>
+                <img src="https://raw.githubusercontent.com/riyanarahman320/26/main/BANDUNG.png" alt="Resonance Odyssey" class="center-image">
             </div>
             <div id="player-token" class="player-token hidden"></div>
         </div>
@@ -1098,12 +1105,12 @@
         const cityData = [
             { name: "Mulai", side: "corner" },
             { name: "Jakarta", side: "side-top", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/JAKARTA.png" },
-            { name: "Bandung", side: "side-top", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/BANDUNG.png" },
-            { name: "Cirebon", side: "side-top", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/CIREBON.png" },
-            { name: "Jogja", side: "corner", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/JOGJA.png" },
-            { name: "Solo", side: "side-right", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/SOLO.png" },
-            { name: "Surabaya", side: "side-right", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/SURABAYA.png" },
-            { name: "Bali", side: "side-right", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/BALI.png" },
+            { name: "Bandung", side: "side-top", image: "https://githubusercontent.com/riyanarahman320/26/blob/1c81d3008b8756c5a51e6af44d603c32da695600/BANDUNG.png" },
+            { name: "Cirebon", side: "side-top", image: "https://githubusercontent.com/riyanarahman320/26/blob/1c81d3008b8756c5a51e6af44d603c32da695600/BANDUNG.png" },
+            { name: "Jogja", side: "corner", image: "https://githubusercontent.com/riyanarahman320/26/blob/1c81d3008b8756c5a51e6af44d603c32da695600/BANDUNG.png" },
+            { name: "Solo", side: "side-right", image: "https://githubusercontent.com/riyanarahman320/26/blob/1c81d3008b8756c5a51e6af44d603c32da695600/BANDUNG.png" },
+            { name: "Surabaya", side: "side-right", image: "https://githubusercontent.com/riyanarahman320/26/blob/1c81d3008b8756c5a51e6af44d603c32da695600/BANDUNG.png" },
+            { name: "Bali", side: "side-right", image: "https://githubusercontent.com/riyanarahman320/26/blob/1c81d3008b8756c5a51e6af44d603c32da695600/BANDUNG.png" },
             { name: "Lombok", side: "corner", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/LOMBOK.png" },
             { name: "Makassar", side: "side-bottom", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/MAKASSAR.png" },
             { name: "Manado", side: "side-bottom", image: "https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/MANADO.png" },
@@ -1292,23 +1299,41 @@
             let move = 0;
             const i = state.idx;
 
-            // Top row (0-4): bergerak horizontal
-            if (i >= 0 && i <= 4) {
+            // Top row (0-3): normal horizontal movement
+            if (i >= 0 && i < 4) {
                 if (dir === 'right') move = 1;
                 if (dir === 'left') move = -1;
-            } 
-            // Right side (5-8): bergerak vertikal ke bawah
-            else if (i >= 5 && i <= 8) {
+            }
+            // Corner: Jogja (index 4) - top right corner
+            // Bisa gerak LEFT (ke Cirebon) atau DOWN (ke Solo)
+            else if (i === 4) {
+                if (dir === 'left') move = -1;   // Ke Cirebon (index 3)
+                if (dir === 'down') move = 1;    // Ke Solo (index 5)
+            }
+            // Right side (5-7): normal vertical movement
+            else if (i > 4 && i < 8) {
                 if (dir === 'down') move = 1;
                 if (dir === 'up') move = -1;
-            } 
-            // Bottom row (9-12): bergerak horizontal ke kiri
-            else if (i >= 9 && i <= 12) {
+            }
+            // Corner: Lombok (index 8) - right bottom corner
+            // Bisa gerak UP (ke Bali) atau LEFT (ke Makassar)
+            else if (i === 8) {
+                if (dir === 'up') move = -1;    // Ke Bali (index 7)
+                if (dir === 'left') move = 1;   // Ke Makassar (index 9)
+            }
+            // Bottom row (9-11): horizontal movement (reversed)
+            else if (i > 8 && i < 12) {
                 if (dir === 'left') move = 1;
                 if (dir === 'right') move = -1;
-            } 
-            // Left side (13-15): bergerak vertikal ke atas
-            else if (i >= 13 && i <= 15) {
+            }
+            // Corner: Ternate (index 12) - bottom left corner
+            // Bisa gerak RIGHT (ke Ambon) atau UP (ke Papua)
+            else if (i === 12) {
+                if (dir === 'right') move = -1;  // Ke Ambon (index 11)
+                if (dir === 'up') move = 1;      // Ke Papua (index 13)
+            }
+            // Left side (13-15): vertical movement (reversed)
+            else if (i >= 13) {
                 if (dir === 'up') move = 1;
                 if (dir === 'down') move = -1;
             }
@@ -1329,39 +1354,6 @@
             }, 850);
         }
 
-        function updateControlButtons() {
-            const i = state.idx;
-            const buttons = {
-                up: document.getElementById('btn-up'),
-                down: document.getElementById('btn-down'),
-                left: document.getElementById('btn-left'),
-                right: document.getElementById('btn-right')
-            };
-
-            // Reset semua
-            Object.values(buttons).forEach(btn => {
-                btn.disabled = true;
-                btn.classList.remove('active');
-            });
-
-            // Tentukan tombol mana saja yang aktif berdasarkan lokasi
-            if (i >= 0 && i <= 4) {
-                // Top row: hanya LEFT dan RIGHT
-                buttons.left.disabled = false;
-                buttons.right.disabled = false;
-            } else if (i >= 5 && i <= 8) {
-                // Right side: hanya UP dan DOWN
-                buttons.up.disabled = false;
-                buttons.down.disabled = false;
-            } else if (i >= 9 && i <= 12) {
-                // Bottom row: hanya LEFT dan RIGHT
-                buttons.left.disabled = false;
-                buttons.right.disabled = false;
-            } else if (i >= 13 && i <= 15) {
-                // Left side: hanya UP dan DOWN
-                buttons.up.disabled = false;
-                buttons.down.disabled = false;
-            }
         }
 
         function showQuiz() {
@@ -1469,21 +1461,38 @@
                 }
             });
 
-            // Tentukan tombol mana saja yang aktif berdasarkan lokasi pemain
-            if (i >= 0 && i <= 4) {
-                // Top row: hanya LEFT dan RIGHT
+            // Top row (0-3): LEFT & RIGHT
+            if (i >= 0 && i < 4) {
                 if (buttons.left) buttons.left.disabled = false;
                 if (buttons.right) buttons.right.disabled = false;
-            } else if (i >= 5 && i <= 8) {
-                // Right side: hanya UP dan DOWN
+            }
+            // Corner: Jogja (index 4): LEFT & DOWN
+            else if (i === 4) {
+                if (buttons.left) buttons.left.disabled = false;
+                if (buttons.down) buttons.down.disabled = false;
+            }
+            // Right side (5-7): UP & DOWN
+            else if (i > 4 && i < 8) {
                 if (buttons.up) buttons.up.disabled = false;
                 if (buttons.down) buttons.down.disabled = false;
-            } else if (i >= 9 && i <= 12) {
-                // Bottom row: hanya LEFT dan RIGHT
+            }
+            // Corner: Lombok (index 8): UP & LEFT
+            else if (i === 8) {
+                if (buttons.up) buttons.up.disabled = false;
+                if (buttons.left) buttons.left.disabled = false;
+            }
+            // Bottom row (9-11): LEFT & RIGHT
+            else if (i > 8 && i < 12) {
                 if (buttons.left) buttons.left.disabled = false;
                 if (buttons.right) buttons.right.disabled = false;
-            } else if (i >= 13 && i <= 15) {
-                // Left side: hanya UP dan DOWN
+            }
+            // Corner: Ternate (index 12): RIGHT & UP
+            else if (i === 12) {
+                if (buttons.right) buttons.right.disabled = false;
+                if (buttons.up) buttons.up.disabled = false;
+            }
+            // Left side (13-15): UP & DOWN
+            else if (i >= 13) {
                 if (buttons.up) buttons.up.disabled = false;
                 if (buttons.down) buttons.down.disabled = false;
             }
